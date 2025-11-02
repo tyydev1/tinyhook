@@ -1,0 +1,12 @@
+{
+    "_comment": {
+        "version": "1.0",
+        "url": "https://yoururllocationhere.com",
+        "description": "Your description here"
+    },
+    "hello": {
+        "version": "1.0",
+        "url": "https://github.com/tyydev1/hello/blob/main/hello.sh",
+        "description": "Hello world script for MiniHook"
+    }
+}
