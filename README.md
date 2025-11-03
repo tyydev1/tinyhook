@@ -1,3 +1,3 @@
-# MiniHook
+# TinyHook
 
-MiniHook is a tiny package manager made on Python.
+TinyHook is a tiny package manager made on Python.
