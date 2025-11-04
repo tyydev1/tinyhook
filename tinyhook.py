@@ -100,38 +100,88 @@ run_parser.add_argument(
 
 list_parser = subparsers.add_parser("list", help="List installed packages")
 
+# remove_parser = subparsers.add_parser("remove", help="Removes a package")
+# remove_parser.add_argument("package_name", help="Name of the package to remove")
+
 args = parser.parse_args()
 
 if args.version:
     print(f"TinyHook {VERSION} - Dev Build")
 
-elif args.command == "hook":
-    if args.quiet: pass
-    elif args.dry_run: print(f"[Dry Run] Would hook {args.package_name}")
+# elif args.command == "hook":
+#     if args.quiet: pass
+#     elif args.dry_run: print(f"[Dry Run] Would hook {args.package_name}")
 
-    else: print(f"Hooking {args.package_name}...")
+#     else: print(f"Hooking {args.package_name}...")
+
+# elif args.command == "run":
+#     if args.quiet: pass
+#     elif args.dry_run: print(f"[Dry Run] Would run {args.package_name}")
+
+#     else: print(f"Running {args.package_name}...")
+
+
+# elif args.command == "list":
+#     if args.quiet: pass
+#     elif args.dry_run: print("[Dry Run] Would list installed packages")
+    
+#     else: print("Listing installed packages...")
+
+# else:
+#     parser.print_help()
+
+
+########################################
+# Command Logic
+########################################
+
+if args.command == "hook":
+    package_name = args.package_name
+    with open(INSTALLED_JSON, "r") as f:
+        installed_data = json.load(f)
+    
+    if is_installed(package_name): print(f"{package_name} is already installed!")
+    else:
+        new_entry = {
+            package_name: {
+                "version": "1.0",
+                "installed_at": "2025-11-04T12:00:00Z",
+                "source_type": "local_path",
+                "source_value": f"/data/packages/{package_name}",
+                "install_path": f"data/packages/{package_name}"
+            }
+        }
+
+        if args.dry_run:
+            print(f"[Dry Run] Would hook {package_name}")
+        else:
+            installed_data.update(new_entry)
+            write_db(installed_data, INSTALLED_JSON)
+            if not args.quiet: print(f"Successfully hooked '{package_name}'!")
 
 elif args.command == "run":
-    if args.quiet: pass
-    elif args.dry_run: print(f"[Dry Run] Would run {args.package_name}")
+    package_name = args.package_name
 
-    else: print(f"Running {args.package_name}...")
+    if not is_installed(package_name): print(f"{package_name} is not installed!")
+    
+    elif args.dry_run: print(f"[Dry Run] Would run {package_name}")
 
+    else: print(f"Running {package_name}")
 
 elif args.command == "list":
-    if args.quiet: pass
-    elif args.dry_run: print("[Dry Run] Would list installed packages")
+    installed_data = read_db(INSTALLED_JSON)
+
+    if not installed_data: print("No packages installed.") # If no packages are installed
     
-    else: print("Listing installed packages...")
+    elif args.dry_run: print("[Dry Run] Would list packages and version")
 
-elif not args.sandbox:
+    else: 
+        for pkg, info in installed_data.items():
+            print(f"{pkg} - version {info['version']}")
+
+else:
     parser.print_help()
-
-
-
-
-
-
+    
 
 
 #########################################################
@@ -179,5 +229,7 @@ class Sandbox:
             print(package_name)
         except: print("[Failure] No arguments provided")
 
-sandbox = Sandbox("tinyhook", True)
-if args.sandbox: sandbox.run()
+
+if args.sandbox:
+    sandbox = Sandbox("tinyhook")
+    sandbox.run()
