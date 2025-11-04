@@ -1,8 +1,46 @@
 import json
 import argparse
+import os
 
 VERSION = "v0.1"
 INSTALLED_JSON = 'data/installed.json'
+
+########################################
+# Database Control
+########################################
+
+def init_db(file_location):
+    if not os.path.exists(file_location):
+        with open(file_location, "w") as f:
+            json.dump({}, f, indent=2)
+
+def read_db(file_location):
+    try:
+        with open(file_location, "r") as f:
+            return json.load(f)
+    except: print(f"File '{file_location}' not found.")
+    
+def write_db(data, file_location):
+    try:
+        with open(file_location, "w") as f:
+            json.dump(data, f, indent=2)
+    except: 
+        if data is None: print(f"Data empty")
+        if file_location is None: print(f"File '{file_location}' not found")
+
+def is_installed(name):
+    try:
+        with open(INSTALLED_JSON, "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+    return name in data
+
+init_db(INSTALLED_JSON)
+
+########################################
+# Argument Parsing
+########################################
 
 parser = argparse.ArgumentParser(prog="tinyhook", description="TinyHook Package Utils - A minimal package manager")
 parser.add_argument(
@@ -95,6 +133,7 @@ elif not args.sandbox:
 
 
 
+
 #########################################################
 #                                                       #
 #                  Welcome to Sandbox.                  #
@@ -114,28 +153,6 @@ class Sandbox:
         print(f"Welcome to Sandbox™!\n\nThe following are instances of Sandbox™ code written inside the Sandbox™ class\nfor Sandbox '{self.name}'")
         self.instance_count = 0
         if should_auto_instance: self.new_instance("Initial Instance")
-
-    def read_db(self, file_location):
-        try:
-            with open(file_location, "r") as f:
-                return json.load(f)
-        except: print(f"File '{file_location}' not found.")
-    
-    def write_db(self, data, file_location):
-        try:
-            with open(file_location, "w") as f:
-                json.dump(data, f, indent=2)
-        except: 
-            if data is None: print(f"Data empty")
-            if file_location is None: print(f"File '{file}' not found")
-
-    def is_installed(self, name):
-        try:
-            with open(INSTALLED_JSON, "r") as f:
-                data = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            data = {}
-        return name in data
     
     def new_instance(self, name):
         self.instance_count += 1
@@ -147,14 +164,14 @@ class Sandbox:
         print("Hello world! learning concept tests here.")
 
         self.new_instance("Reading data")
-        data = self.read_db(INSTALLED_JSON)
+        data = read_db(INSTALLED_JSON)
         print(data)
 
         self.new_instance("Writing data (Updating)")
         new_data = {"hello": {"version": "1.0"}}
-        if not self.is_installed("hello"): data.update(new_data)
-        self.write_db(data, INSTALLED_JSON)
-        print(self.read_db(INSTALLED_JSON))
+        if not is_installed("hello"): data.update(new_data)
+        write_db(data, INSTALLED_JSON)
+        print(read_db(INSTALLED_JSON))
 
         self.new_instance("Accessing arguments for hook")
         try: 
