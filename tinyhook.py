@@ -100,8 +100,19 @@ run_parser.add_argument(
 
 list_parser = subparsers.add_parser("list", help="List installed packages")
 
-# remove_parser = subparsers.add_parser("remove", help="Removes a package")
-# remove_parser.add_argument("package_name", help="Name of the package to remove")
+remove_parser = subparsers.add_parser("remove", help="Removes a package")
+remove_parser.add_argument("package_name", help="Name of the package to remove")
+remove_parser.add_argument(
+    "--dry-run",
+    action="store_true",
+    help="Simulates action without executing it"
+)
+remove_parser.add_argument(
+    "-q", "--quiet",
+    action="store_true",
+    help="Supresses normal output behavior"
+)
+
 
 args = parser.parse_args()
 
@@ -178,6 +189,21 @@ elif args.command == "list":
     else: 
         for pkg, info in installed_data.items():
             print(f"{pkg} - version {info['version']}")
+
+elif args.command == "remove":
+    package_name = args.package_name
+    installed_data = read_db(INSTALLED_JSON)
+
+    if not installed_data: print("No packages installed")
+
+    elif args.dry_run and not args.quiet: print(f"[Dry Run] Would remove {package_name}")
+
+    elif not package_name in installed_data: print(f"Package '{package_name}' is not found")
+
+    else:
+        deleted = installed_data.pop(package_name)
+        write_db(installed_data, INSTALLED_JSON)
+        if not args.quiet: print(f"Successfully removed {package_name} !")
 
 else:
     parser.print_help()
