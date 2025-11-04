@@ -1,7 +1,16 @@
 {
-    "packages": {},
-    "metadata": {
-        "tinyhook_version": "0.1.0",
-        "created": "2025-11-2"
-    }
+  "hello-util": {
+    "version": "1.0.0",
+    "installed_at": "2025-11-04T10:15:30Z",
+    "source_type": "local_path",
+    "source_value": "/path/to/local/hello-util-files",
+    "install_path": "data/packages/hello-util"
+  },
+  "data-logger": {
+    "version": "2.1.3",
+    "installed_at": "2025-11-04T10:18:45Z",
+    "source_type": "url_placeholder",
+    "source_value": "https://placeholder.com/data-logger-2.1.3.zip",
+    "install_path": "data/packages/data-logger"
+  }
 }
