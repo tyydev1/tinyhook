@@ -1,6 +1,9 @@
 import json
 import argparse
 import os
+import shutil
+
+from pathlib import Path
 
 VERSION = "v0.1"
 INSTALLED_JSON = 'data/installed.json'
@@ -36,6 +39,14 @@ def is_installed(name):
     except (FileNotFoundError, json.JSONDecodeError):
         data = {}
     return name in data
+
+def get_package_info(package_name, file_data_location=REPO_JSON):
+    data = read_db(file_data_location)
+
+    if package_name in data.get("packages", {}):
+        return data["packages"][package_name]
+    else:
+        return None
 
 init_db(INSTALLED_JSON)
 
@@ -204,11 +215,19 @@ elif args.command == "remove":
     else:
         deleted = installed_data.pop(package_name)
         write_db(installed_data, INSTALLED_JSON)
-        if not args.quiet: print(f"Successfully removed {package_name} !")
+        if not args.quiet: print(f"Successfully removed '{package_name}'!")
 
 else:
     parser.print_help()
     
+
+
+
+
+
+
+
+
 
 
 #########################################################
@@ -240,9 +259,11 @@ class Sandbox:
     def run(self):
         print("Hello world! learning concept tests here.")
 
+
         self.new_instance("Reading data")
         data = read_db(INSTALLED_JSON)
         print(data)
+
 
         self.new_instance("Writing data (Updating)")
         new_data = {"hello": {"version": "1.0"}}
@@ -250,11 +271,20 @@ class Sandbox:
         write_db(data, INSTALLED_JSON)
         print(read_db(INSTALLED_JSON))
 
+
         self.new_instance("Accessing arguments for hook")
         try: 
             package_name = args.package_name
             print(package_name)
         except: print("[Failure] No arguments provided")
+
+
+        self.new_instance("Reading package from repo.json")
+        pkg_info = get_package_info("hello") # Defaults to repo.json
+        if pkg_info:
+            print(f"Found: {pkg_info}")
+        else:
+            print("Package not found in repos")
 
 
 if args.sandbox:
