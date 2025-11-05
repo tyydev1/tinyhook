@@ -215,7 +215,7 @@ elif args.command == "remove":
     else:
         deleted = installed_data.pop(package_name)
         write_db(installed_data, INSTALLED_JSON)
-        if not args.quiet: print(f"Successfully removed {package_name} !")
+        if not args.quiet: print(f"Successfully removed '{package_name}'!")
 
 else:
     parser.print_help()
