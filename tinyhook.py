@@ -4,6 +4,7 @@ import os
 
 VERSION = "v0.1"
 INSTALLED_JSON = 'data/installed.json'
+REPO_JSON = 'repo.json'
 
 ########################################
 # Database Control
