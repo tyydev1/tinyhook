@@ -11,8 +11,8 @@ A minimal package manager built from scratch to learn:
 
 ## Planned Features
 - [ ] Install packages locally
-- [ ] List installed packages
-- [ ] Remove packages
+- [x] List installed packages
+- [x] Remove packages
 - [ ] Download from remote repositories
 - [ ] Run packages as launcher
 

@@ -12,5 +12,8 @@
     "source_type": "url_placeholder",
     "source_value": "https://placeholder.com/data-logger-2.1.3.zip",
     "install_path": "data/packages/data-logger"
+  },
+  "hello": {
+    "version": "1.0"
   }
 }

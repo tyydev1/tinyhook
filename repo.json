@@ -11,6 +11,12 @@
       "source_type": "url_placeholder",
       "source_value": "https://placeholder.com/data-logger-2.1.3.zip",
       "description": "For logging simple data."
+    },
+    "hello": {
+      "version": "1.0.0",
+      "source_type": "git_repo",
+      "source_value": "https://github.com/tyydev1/hello",
+      "description": "A simple hello world script"
     }
   }
 }
