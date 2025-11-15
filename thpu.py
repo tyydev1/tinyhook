@@ -33,7 +33,7 @@ def read_db(file_location):
             return json.load(f)
     except:
         print(f"File '{file_location}' not found.")
-        return {"None"}
+        return {}
 
 
 def write_db(data, file_location):
